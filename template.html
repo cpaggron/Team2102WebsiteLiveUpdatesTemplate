@@ -31,26 +31,42 @@
 
     .left {
         display: table-cell;
+        width: 35%;
+        padding-right: 4px;
     }
 
     .right {
         display: table-cell;
+        width: 65%;
+        padding-left: 4px;
     }
 
     .header {
         text-align: center;
         height: 60px;
         line-height: 60px;
-        max-width: 1000px;
-        /* min-width: 700px;*/
         background-color: #fcba03;
-        border-radius: 50px;
+        border-radius: 25px;
         color: #fff;
         font-size: 100%;
         padding-top: 5px;
         padding-bottom: 5px;
         padding-left: 18px;
         padding-right: 18px;
+    }
+
+    .date-place {
+        padding-left: 20px;
+        padding-top: 8px;
+    }
+
+    .summary {
+        padding-left: 20px;
+        padding-top: 20px;
+    }
+
+    .awards {
+        padding: 20px;
     }
 
     /* Table */
@@ -97,6 +113,21 @@
         <div class="header">
             <strong>San Diego Regional presented by Qualcomm</strong>
         </div>
+        <div class="date-place">
+            📍 San Diego, California<br>📅 Week 4 | March 23 to March 25, 2023
+        </div>
+        <div class="summary">
+            Team 2102 was <strong>Rank 8</strong> with a record of <strong>8-5-0</strong>
+        </div>
+        <div class="awards">
+            <strong>Awards:</strong>
+            <table>
+                    <th>
+                        - FIRST Impact Award
+                    </th>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <div class="right">
@@ -129,7 +160,7 @@
     </div>
 </div>
 
-<!-- Use AJAX Google CDN -->
+<!-- Use AJAX via Google CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <!-- JavaScript -->
@@ -148,6 +179,7 @@
     // Run when site loads
     var time = new Date();
     update();
+
 
 
 
@@ -174,12 +206,23 @@
         return getTBA("team/frc2102/events/2023");
     }
 
-    function getEventNames() {
-        var events = getEvents();
-        var names = [];
-        for (let i = 0; i < events.length; i++) {
-            names[i] = events[i]["name"];
-        }
+    function getEventKeys() {
+        return getTBA("/team/frc2102/events/keys");
+    }
+
+    function getEvent(key) {
+        return getTBA("/event/"+key);
+    }
+
+    function getSummary(key) {
+        return getEventStatuses()[key]["overall_status_str"];
+    }
+
+    function getAwards(key) {
+        return getTBA("/team/frc2102/event/2023casd/awards");
+    }
+
+    function getEventName(key) {
         return names;
     }
 
@@ -188,10 +231,6 @@
         time = new Date();
         
         var e = "Last updated "+time.getHours()+":"+time.getMinutes()+"<br>";
-        var events = getEventNames();
-        for (let i = 0; i < events.length; i++) {
-            e += events[i] + "<br>";
-        }
-        document.getElementById("events").innerHTML = e;
+        console.log(getAwards("2023casd"));
     }
 </script>
