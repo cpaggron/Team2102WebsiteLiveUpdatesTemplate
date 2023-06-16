@@ -1,0 +1,197 @@
+<!-- CSS -->
+<style>
+    /* Set text defaults */
+    * {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    /* Update Button */
+    #update {
+        border-radius: 10px;
+    }
+
+    .badge {
+        background-color: #fcba03;
+        border-radius: 10px;
+        color: #fff;
+        display: inline-block;
+        font-size: 400px;
+        font-weight: 700;
+        line-height: 1;
+        min-width: 10px;
+        padding: 3px 7px;
+        text-align: center;
+        vertical-align: baseline;
+        white-space: nowrap;
+    }
+
+    .main-body {
+        display: table;
+    }
+
+    .left {
+        display: table-cell;
+    }
+
+    .right {
+        display: table-cell;
+    }
+
+    .header {
+        text-align: center;
+        height: 60px;
+        line-height: 60px;
+        max-width: 1000px;
+        /* min-width: 700px;*/
+        background-color: #fcba03;
+        border-radius: 50px;
+        color: #fff;
+        font-size: 100%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .top-row {
+        background-color: #f8f2a2;
+    }
+
+    th {
+        border: 3px solid #8a8a8a;
+        text-align: left;
+        padding: 8px;
+    }
+
+    /* Blue Alliance */
+    .blue {
+        background-color: #ddf;
+    }
+
+    .blue-score {
+        color: rgb(112, 112, 252)
+    }
+
+    /* Red Alliance */
+    .red {
+        background-color: #fdd;
+    }
+
+    .red-score {
+        color: rgb(253, 106, 106);
+    }
+
+</style>
+
+<!-- HTML -->
+<button id="update" onclick="update()">Update</button>
+<p id="events"></p>
+<div class="main-body">
+    <div class="left">
+        <div class="header">
+            <strong>San Diego Regional presented by Qualcomm</strong>
+        </div>
+    </div>
+
+    <div class="right">
+        <table>
+            <tr>
+                <th class="top-row">Match</th>
+                <th class="top-row">W/L</th>
+                <th class="blue" colspan="3">Blue Alliance</th>
+                <th class="red" colspan="3">Red Alliance</th>
+                <th class="top-row">Score</th>
+                <th class="top-row">▶️</th>
+            </tr>
+            <tr>
+                <th>Qual 1</th>
+                <th>W</th>
+                <th class="blue">2102</th>
+                <th class="blue">3128</th>
+                <th class="blue">1622</th>
+                <th class="red">1678</th>
+                <th class="red">973</th>
+                <th class="red">254</th>
+                <th>
+                    <span class="blue-score">200</span>
+                    -
+                    <span class="red-score">31</span>
+                </th>
+                <th>▶️</th>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- Use AJAX Google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- JavaScript -->
+<script>
+    // GET retrieves the data
+    // LOAD loads date onto the website
+
+    /*
+    Functions:
+    update() - Update main body
+    getTBA() - Connects to the Blue Alliance
+    getEventStatus()
+    getEventNames()
+    */
+
+    // Run when site loads
+    var time = new Date();
+    update();
+
+
+
+    // Functions
+
+    function getTBA(dir) {
+        var info;
+        $.ajax({
+            url: "https://www.thebluealliance.com/api/v3/" + dir,
+            headers: {
+                "X-TBA-Auth-Key": 'dsU1LGZffn1dcsuBt5E3XwWkL2hmCLUJrhsJiKczMZUCBpdpguEz4Psbh4Dd5RHR'
+            },
+            async: false,
+            success: function(result){info = result;}
+        });
+        return info;
+    }
+
+    function getEventStatuses() {
+        return getTBA("team/frc2102/events/2023/statuses");
+    }
+
+    function getEvents() {
+        return getTBA("team/frc2102/events/2023");
+    }
+
+    function getEventNames() {
+        var events = getEvents();
+        var names = [];
+        for (let i = 0; i < events.length; i++) {
+            names[i] = events[i]["name"];
+        }
+        return names;
+    }
+
+    function update() {
+        // Update the time
+        time = new Date();
+        
+        var e = "Last updated "+time.getHours()+":"+time.getMinutes()+"<br>";
+        var events = getEventNames();
+        for (let i = 0; i < events.length; i++) {
+            e += events[i] + "<br>";
+        }
+        document.getElementById("events").innerHTML = e;
+    }
+</script>
