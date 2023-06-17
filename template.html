@@ -196,16 +196,21 @@
         return info;
     }
 
+    function getYear() {
+        date = new Date();
+        return 1900 + date.getYear();
+    }
+
     function getEventStatuses() {
-        return getTBA("team/frc2102/events/2023/statuses");
+        return getTBA("team/frc2102/events/"+getYear()+"/statuses");
     }
 
     function getEvents() {
-        return getTBA("team/frc2102/events/2023");
+        return getTBA("team/frc2102/events/"+getYear());
     }
 
     function getEventKeys() {
-        return getTBA("team/frc2102/events/2023/keys");
+        return getTBA("team/frc2102/events/"+getYear()+"/keys");
     }
 
     function getEvent(key) {
