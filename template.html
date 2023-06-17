@@ -20,7 +20,7 @@
         font-size: 1.25vw;
     }
 
-    #main-body {
+    .body, #test {
         display: table;
     }
 
@@ -34,7 +34,7 @@
         display: table-cell;
         width: 65%;
         padding-left: .3125vw;
-        font-size: 1.25vw;
+        font-size: .9375vw;
     }
 
     .header {
@@ -56,18 +56,18 @@
     .date-place {
         padding-left: 1.5625vw;
         padding-top: .625vw;
-        font-size: 1.25vw;
+        font-size: .9375vw;
     }
 
     .summary {
         padding-left: 1.5625vw;
         padding-top: 1.5625vw;
-        font-size: 1.25vw;
+        font-size: 1.171875vw;
     }
 
     .awards {
         padding: 1.5625vw;
-        font-size: 1.25vw;
+        font-size: 1.171875vw;
     }
 
     /* Table */
@@ -83,7 +83,8 @@
     th {
         border: .234375vw solid #8a8a8a;
         text-align: left;
-        padding: .625vw;
+        padding: .3125vw;
+        height: auto;
     }
 
     /* Blue Alliance */
@@ -109,7 +110,8 @@
 <!-- HTML -->
 <button id="update" onclick="update()">Update</button>
 <p><span id="time"></span><i>Live updates provided by the Blue Alliance</i></p>
-<div id="main-body">
+<div id="main-body"></div>
+<div id="test">
     <div class="left">
         <div class="header">
             <strong>Ventura County Regional</strong>
@@ -126,13 +128,12 @@
                     <th>
                         - FIRST Impact Award
                     </th>
-                </tr>
             </table>
         </div>
     </div>
 
     <div class="right">
-        <table>
+        <table id="schedule">
             <tr>
                 <th class="top-row">Match</th>
                 <th class="top-row">W/L</th>
@@ -180,9 +181,6 @@
     // Run when site loads
     update();
 
-
-
-
     // Functions
 
     function getTBA(dir) {
@@ -207,7 +205,7 @@
     }
 
     function getEventKeys() {
-        return getTBA("/team/frc2102/events/keys");
+        return getTBA("team/frc2102/events/2023/keys");
     }
 
     function getEvent(key) {
@@ -219,7 +217,7 @@
     }
 
     function getAwards(key) {
-        return getTBA("/team/frc2102/event/2023casd/awards");
+        return getTBA("team/frc2102/event/"+key+"/awards");
     }
 
     function getEventName(key) {
@@ -238,11 +236,98 @@
             hour = "00";
         }
         return "Last updated " + hour + colon + min + "<br>";
+    }
 
+    function getDate(date, year) {
+        var year = date.substring(0, 4);
+        var months = {
+            "01": "January",
+            "02": "February",
+            "03": "March",
+            "04": "April",
+            "05": "May",
+            "06": "June",
+            "07": "July",
+            "08": "August",
+            "09": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        }
+        var month = months[date.substring(5, 7)];
+        var date = date.substring(8);
+        if (date.substring(0, 1) == "0") {
+            date = date.substring(1);
+        }
+        if (year) {
+            return month+" "+date+", "+year;
+        }
+        return month+" "+date;
+    }
+    
+    function getPlace(city, state, country) {
+        return city + ", " + state + ", " + country;
     }
 
     function update() {
+        var events = getEvents();
+        var statuses = getEventStatuses(); 
+        console.log(events);
+        console.log(statuses);
+
+        var display_string = "";
+        for (let i = 0; i < events.length; i++) {
+            var event = events[i];
+            var key = event["key"];
+            var status = statuses[key];
+            var awards = getAwards(key);
+            
+
+            var start_date = getDate(event["start_date"], false);
+            var end_date = getDate(event["end_date"], true);
+            var place = getPlace(event["city"], event["state_prov"], event["country"]);
+            var award_string = "";
+            for (let i = 0; i < awards.length; i++){
+                award_string += "- "+awards[i]["name"]+"<br>";
+            }
+            award_string = award_string.substr(0, award_string.length-4);
+
+            display_string += 
+                `<div class="body">`+
+                    `<div class="left">`+
+                        `<div class="header">`+
+                            `<strong>`+event["name"]+`</strong>`+
+                        `</div>`+
+                        `<div class="date-place">`+
+                            "&#128205; "+place+"<br>&#128198; Week "+(event["week"]+1)+" | "+start_date+" to "+end_date+
+                        `</div>`+
+                        `<div class="summary">`+
+                            status["overall_status_str"]+
+                        `</div>`+
+                        `<div class="awards">`+
+                            `<strong>Awards:</strong>`+
+                            `<table>`+
+                                `<th>`+award_string+`</th>`+
+                            `</table>`+
+                        `</div>`+
+                    `</div>`+
+                    `<div class="right">`+
+                        `<table id="schedule">`+
+                            `<tr>`+
+                                `<th class="top-row">Match</th>`+
+                                `<th class="top-row">W/L</th>`+
+                                `<th class="blue" colspan="3">Blue Alliance</th>`+
+                                `<th class="red" colspan="3">Red Alliance</th>`+
+                                `<th class="top-row">Score</th>`+
+                                `<th class="top-row">▶️</th>`+
+                            `</tr>`+
+                        `</table>`+
+                    `</div>`+
+                `</div>`;
+
+        }
         
+        document.getElementById("main-body").innerHTML = display_string;
         document.getElementById("time").innerHTML = getTime();
     }
 </script>
