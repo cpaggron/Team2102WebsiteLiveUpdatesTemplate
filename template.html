@@ -105,11 +105,15 @@
         color: rgb(253, 106, 106);
     }
 
+    #our-team {
+        color:#fcba03;
+    }
+
 </style>
 
 <!-- HTML -->
 <button id="update" onclick="update()">Update</button>
-<p><span id="time"></span><i>Live updates provided by the Blue Alliance</i></p>
+<p><span id="time"></span><i>Live updates provided by the <a href="https://www.thebluealliance.com/team/2102" target="_blank">Blue Alliance</a></i></p>
 <div id="main-body"></div>
 <div id="test">
     <div class="left">
@@ -237,10 +241,21 @@
         if ((""+min).length == 1) {
             colon += "0";
         }
-        if (hour == "0") {
+        if ((""+hour) == "0") {
             hour = "00";
         }
         return "Last updated " + hour + colon + min + "<br>";
+    }
+
+    function formatTime(hour, min) {
+        var colon = ":";
+        if ((""+min).length == 1) {
+            colon += "0";
+        }
+        if ((""+hour) == "0") {
+            hour = "00";
+        }
+        return hour + colon + min;
     }
 
     function getDate(date, year) {
@@ -274,11 +289,13 @@
         return city + ", " + state + ", " + country;
     }
 
+    function getMatches(key) {
+        return getTBA("team/frc2102/event/"+key+"/matches");
+    }
+
     function update() {
         var events = getEvents();
-        var statuses = getEventStatuses(); 
-        console.log(events);
-        console.log(statuses);
+        var statuses = getEventStatuses();
 
         var display_string = "";
         for (let i = 0; i < events.length; i++) {
@@ -286,16 +303,84 @@
             var key = event["key"];
             var status = statuses[key];
             var awards = getAwards(key);
-            
+            var matches = getMatches(key);
+            console.log(matches);
 
             var start_date = getDate(event["start_date"], false);
             var end_date = getDate(event["end_date"], true);
             var place = getPlace(event["city"], event["state_prov"], event["country"]);
             var award_string = "";
+            var match_string = "";
+
+            // Get Awards
             for (let i = 0; i < awards.length; i++){
                 award_string += "- "+awards[i]["name"]+"<br>";
             }
             award_string = award_string.substr(0, award_string.length-4);
+
+            // Get matches and put it into the table
+
+            // Match name
+            for (let k = 0; k < matches.length; k++) {
+                var current = matches[k];
+                var comp_level = current["comp_level"];
+                var name;
+                var winner = current["winning_alliance"];
+                var blue = current["alliances"]["blue"];
+                var red = current["alliances"]["red"];
+                var videos = current["videos"];
+                var win_loss;
+                var score;
+                var replay;
+                if (comp_level == "qm") {
+                    name = "Quals "+current["match_number"];
+                } else if (comp_level == "sf") {
+                    name = "Semis "+current["match_number"];
+                } else {
+                    name = "Finals "+current["match_number"];
+                }
+
+                // Get the teams
+                var teams = "";
+                // blue alliance
+                for (let q = 0; q < 3; q++) {
+                    if (blue[q] == "frc2102") {
+                        teams += '<th class="blue" id="our-team">2102</th>';
+                    } else {
+                        teams += '<th class="blue">'+blue[q]+'</th>';
+                    }
+                }
+                // red alliance
+                for (let q = 0; q < 3; q++) {
+                    if (red[q] == "frc2102") {
+                        teams += '<th class="red" id="our-team">2102</th>';
+                    } else {
+                        teams += '<th class="red">'+red[q]+'</th>';
+                    }
+                }
+
+                var match = "<th>"+name+"</th>";
+
+                for (let v = 0; v < videos.length; v++) {
+                    if (videos[v]["type"] == "youtube") {
+                        replay = '<th><a href="https://youtu.be/'+videos[v]["key"]+'" target="_blank">▶️</a></th>';
+                        break;
+                    }
+                }
+                if (replay == null) {
+                    replay = "<th></th>";
+                }
+
+                if (winner == null) {
+                    win_loss = "<th></th>";
+                    var predicted = new Date(current["predicted_time"] * 1000);
+                    score = "est " + formatTime(predicted.getHours(), predicted.getMinutes());
+                } else {
+                    win_loss = "<th>win</th>";
+                    score = "<th>80-0</th>";
+                }
+                match_string += "<tr>" + match + win_loss + teams + score + replay + "</tr>";
+            }
 
             display_string += 
                 `<div class="body">`+
@@ -326,6 +411,7 @@
                                 `<th class="top-row">Score</th>`+
                                 `<th class="top-row">▶️</th>`+
                             `</tr>`+
+                            match_string+
                         `</table>`+
                     `</div>`+
                 `</div>`;
