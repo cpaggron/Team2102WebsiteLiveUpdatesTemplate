@@ -112,7 +112,7 @@
 <div id="main-body">
     <div class="left">
         <div class="header">
-            <strong>San Diego Regional presented by Qualcomm</strong>
+            <strong>Ventura County Regional</strong>
         </div>
         <div class="date-place">
             &#128205; San Diego, California<br>&#128198; Week 4 | March 23 to March 25, 2023
@@ -231,7 +231,7 @@
         var hour = time.getHours();
         var min = time.getMinutes();
         var colon = ":";
-        if (min.length == 1) {
+        if ((""+min).length == 1) {
             colon += "0";
         }
         if (hour == "0") {
@@ -244,6 +244,5 @@
     function update() {
         
         document.getElementById("time").innerHTML = getTime();
-        console.log(getAwards("2023casd"));
     }
 </script>
