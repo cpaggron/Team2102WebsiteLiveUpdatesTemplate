@@ -7,66 +7,56 @@
 
     /* Update Button */
     #update {
-        border-radius: 10px;
-    }
-
-    .badge {
+        border-radius: .78125vw;
+        min-height: 1.171875vw;
+        min-width: 5.859375vw;
         background-color: #fcba03;
-        border-radius: 10px;
+        border-color: #c0b7b7;
         color: #fff;
-        display: inline-block;
-        font-size: 400px;
-        font-weight: 700;
-        line-height: 1;
-        min-width: 10px;
-        padding: 3px 7px;
-        text-align: center;
-        vertical-align: baseline;
-        white-space: nowrap;
     }
 
-    .main-body {
+    #main-body {
         display: table;
     }
 
     .left {
         display: table-cell;
         width: 35%;
-        padding-right: 4px;
+        padding-right: .3125vw;
     }
 
     .right {
         display: table-cell;
         width: 65%;
-        padding-left: 4px;
+        padding-left: .3125vw;
     }
 
     .header {
         text-align: center;
-        height: 60px;
-        line-height: 60px;
-        background-color: #fcba03;
-        border-radius: 25px;
-        color: #fff;
-        font-size: 100%;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 18px;
-        padding-right: 18px;
+        height: 4.6875vw;
+        line-height: 4.6875vw;
+        background-color: #3e96ee;
+        border-radius: 1.953125vw;
+        color: #ffffff;
+        font-size: 4.2vw;
+        padding-top: .390625vw;
+        padding-bottom: .390625vw;
+        padding-left: 1.40625vw;
+        padding-right: 1.40625vw;
     }
 
     .date-place {
-        padding-left: 20px;
-        padding-top: 8px;
+        padding-left: 1.5625vw;
+        padding-top: .625vw;
     }
 
     .summary {
-        padding-left: 20px;
-        padding-top: 20px;
+        padding-left: 1.5625vw;
+        padding-top: 1.5625vw;
     }
 
     .awards {
-        padding: 20px;
+        padding: 1.5625vw;
     }
 
     /* Table */
@@ -80,9 +70,9 @@
     }
 
     th {
-        border: 3px solid #8a8a8a;
+        border: .234375vw solid #8a8a8a;
         text-align: left;
-        padding: 8px;
+        padding: .625vw;
     }
 
     /* Blue Alliance */
@@ -107,8 +97,8 @@
 
 <!-- HTML -->
 <button id="update" onclick="update()">Update</button>
-<p id="events"></p>
-<div class="main-body">
+<p id="time"></p>
+<div id="main-body">
     <div class="left">
         <div class="header">
             <strong>San Diego Regional presented by Qualcomm</strong>
@@ -177,7 +167,6 @@
     */
 
     // Run when site loads
-    var time = new Date();
     update();
 
 
@@ -226,11 +215,24 @@
         return names;
     }
 
+    function getTime() {
+        var time = new Date();
+        var hour = time.getHours();
+        var min = time.getMinutes();
+        var colon = ":";
+        if (min.length == 1) {
+            colon += "0";
+        }
+        if (hour == "0") {
+            hour = "00";
+        }
+        return "Last updated " + hour + colon + min + "<br>";
+
+    }
+
     function update() {
-        // Update the time
-        time = new Date();
         
-        var e = "Last updated "+time.getHours()+":"+time.getMinutes()+"<br>";
+        document.getElementById("time").innerHTML = getTime();
         console.log(getAwards("2023casd"));
     }
 </script>
