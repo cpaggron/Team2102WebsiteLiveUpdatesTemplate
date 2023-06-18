@@ -140,7 +140,7 @@
         $.ajax({
             url: "https://www.thebluealliance.com/api/v3/" + dir,
             headers: {
-                "X-TBA-Auth-Key": 'dsU1LGZffn1dcsuBt5E3XwWkL2hmCLUJrhsJiKczMZUCBpdpguEz4Psbh4Dd5RHR'
+                "X-TBA-Auth-Key": 'INSERT KEY HERE'
             },
             async: false,
             success: function(result){info = result;}
@@ -256,79 +256,83 @@
             // Get matches and put it into the table
 
             // Match name
-            for (let k = 0; k < matches.length; k++) {
-                var current = matches[k];
-                var comp_level = current["comp_level"];
-                var name;
-                var winner = current["winning_alliance"];
-                var blue = current["alliances"]["blue"]["team_keys"];
-                var red = current["alliances"]["red"]["team_keys"];
-                var videos = current["videos"];
-                var win_loss;
-                var score;
-                var replay;
-                var our_alliance;
-                if (comp_level == "qm") {
-                    name = "Quals "+current["match_number"];
-                } else if (comp_level == "sf") {
-                    name = "Playoffs "+current["set_number"];
-                } else {
-                    name = "Finals "+current["match_number"];
-                }
-
-                // Get the teams
-                var teams = "";
-                // blue alliance
-                for (let q = 0; q < 3; q++) {
-                    if (blue[q] == "frc2102") {
-                        teams += '<th class="blue" id="our-team">2102</th>';
-                        our_alliance = "blue";
+            if (matches.length > 0) {
+                for (let k = 0; k < matches.length; k++) {
+                    var current = matches[k];
+                    var comp_level = current["comp_level"];
+                    var name;
+                    var winner = current["winning_alliance"];
+                    var blue = current["alliances"]["blue"]["team_keys"];
+                    var red = current["alliances"]["red"]["team_keys"];
+                    var videos = current["videos"];
+                    var win_loss;
+                    var score;
+                    var replay;
+                    var our_alliance;
+                    if (comp_level == "qm") {
+                        name = "Quals "+current["match_number"];
+                    } else if (comp_level == "sf") {
+                        name = "Playoffs "+current["set_number"];
                     } else {
-                        teams += '<th class="blue">'+blue[q].substring(3)+'</th>';
+                        name = "Finals "+current["match_number"];
                     }
-                }
-                // red alliance
-                for (let q = 0; q < 3; q++) {
-                    if (red[q] == "frc2102") {
-                        teams += '<th class="red" id="our-team">2102</th>';
-                        our_alliance = "red";
+
+                    // Get the teams
+                    var teams = "";
+                    // blue alliance
+                    for (let q = 0; q < 3; q++) {
+                        if (blue[q] == "frc2102") {
+                            teams += '<th class="blue" id="our-team">2102</th>';
+                            our_alliance = "blue";
+                        } else {
+                            teams += '<th class="blue">'+blue[q].substring(3)+'</th>';
+                        }
+                    }
+                    // red alliance
+                    for (let q = 0; q < 3; q++) {
+                        if (red[q] == "frc2102") {
+                            teams += '<th class="red" id="our-team">2102</th>';
+                            our_alliance = "red";
+                        } else {
+                            teams += '<th class="red">'+red[q].substring(3)+'</th>';
+                        }
+                    }
+
+                    var match = "<th>"+name+"</th>";
+
+                    for (let v = 0; v < videos.length; v++) {
+                        if (videos[v]["type"] == "youtube") {
+                            replay = '<th><a href="https://youtu.be/'+videos[v]["key"]+'" target="_blank">▶️</a></th>';
+                            break;
+                        }
+                    }
+                    if (replay == null) {
+                        replay = "<th></th>";
+                    }
+
+                    if (winner == null) {
+                        win_loss = "<th></th>";
+                        var predicted = new Date(current["predicted_time"] * 1000);
+                        score = "est " + formatTime(predicted.getHours(), predicted.getMinutes());
                     } else {
-                        teams += '<th class="red">'+red[q].substring(3)+'</th>';
+                        var w_or_l;
+                        var w = current["winning_alliance"];
+                        if (w == our_alliance) {
+                            w_or_l = '<span class="win">W</span>';
+                        } else if (w == "red" || w == "blue") {
+                            w_or_l = '<span class="lose">L</span>';
+                        } else {
+                            w_or_l = "T";
+                        }
+                        win_loss = "<th>"+w_or_l+"</th>";
+                        var b_score = current["alliances"]["blue"]["score"];
+                        var r_score = current["alliances"]["red"]["score"];
+                        score = '<th><span class="blue-score">'+b_score+'</span> - <span class="red-score">'+r_score+'</th>';
                     }
+                    match_string += "<tr>" + match + win_loss + teams + score + replay + "</tr>";
                 }
-
-                var match = "<th>"+name+"</th>";
-
-                for (let v = 0; v < videos.length; v++) {
-                    if (videos[v]["type"] == "youtube") {
-                        replay = '<th><a href="https://youtu.be/'+videos[v]["key"]+'" target="_blank">▶️</a></th>';
-                        break;
-                    }
-                }
-                if (replay == null) {
-                    replay = "<th></th>";
-                }
-
-                if (winner == null) {
-                    win_loss = "<th></th>";
-                    var predicted = new Date(current["predicted_time"] * 1000);
-                    score = "est " + formatTime(predicted.getHours(), predicted.getMinutes());
-                } else {
-                    var w_or_l;
-                    var w = current["winning_alliance"];
-                    if (w == our_alliance) {
-                        w_or_l = '<span class="win">W</span>';
-                    } else if (w == "red" || w == "blue") {
-                        w_or_l = '<span class="lose">L</span>';
-                    } else {
-                        w_or_l = "T";
-                    }
-                    win_loss = "<th>"+w_or_l+"</th>";
-                    var b_score = current["alliances"]["blue"]["score"];
-                    var r_score = current["alliances"]["red"]["score"];
-                    score = '<th><span class="blue-score">'+b_score+'</span> - <span class="red-score">'+r_score+'</th>';
-                }
-                match_string += "<tr>" + match + win_loss + teams + score + replay + "</tr>";
+            } else {
+                match_string = "<tr><th colspan='10'>Schedule hasn't been posted yet, please check back later</th></tr>";
             }
 
             display_string += 
