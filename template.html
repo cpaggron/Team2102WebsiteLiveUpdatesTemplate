@@ -131,28 +131,16 @@
 
 <!-- JavaScript -->
 <script>
-    // GET retrieves the data
-    // LOAD loads date onto the website
-
-    /*
-    Functions:
-    update() - Update main body
-    getTBA() - Connects to the Blue Alliance
-    getEventStatus()
-    getEventNames()
-    */
-
     // Run when site loads
     update();
 
     // Functions
-
     function getTBA(dir) {
         var info;
         $.ajax({
             url: "https://www.thebluealliance.com/api/v3/" + dir,
             headers: {
-                "X-TBA-Auth-Key": 'INSERT KEY HERE'
+                "X-TBA-Auth-Key": 'dsU1LGZffn1dcsuBt5E3XwWkL2hmCLUJrhsJiKczMZUCBpdpguEz4Psbh4Dd5RHR'
             },
             async: false,
             success: function(result){info = result;}
@@ -173,24 +161,12 @@
         return getTBA("team/frc2102/events/"+getYear());
     }
 
-    function getEventKeys() {
-        return getTBA("team/frc2102/events/"+getYear()+"/keys");
-    }
-
     function getEvent(key) {
         return getTBA("/event/"+key);
     }
 
-    function getSummary(key) {
-        return getEventStatuses()[key]["overall_status_str"];
-    }
-
     function getAwards(key) {
         return getTBA("team/frc2102/event/"+key+"/awards");
-    }
-
-    function getEventName(key) {
-        return names;
     }
 
     function getTime() {
