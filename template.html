@@ -22,6 +22,8 @@
 
     .body, #test {
         display: table;
+        padding-bottom: 1.171875vw;
+        padding-top: 1.171875vw;
     }
 
     .left {
@@ -67,7 +69,7 @@
 
     .awards {
         padding: 1.5625vw;
-        font-size: 1.171875vw;
+        font-size: 1.09375vw;
     }
 
     /* Table */
@@ -106,7 +108,7 @@
     }
 
     #our-team {
-        color:#fcba03;
+        color:#a77b02;
     }
 
 </style>
@@ -326,8 +328,8 @@
                 var comp_level = current["comp_level"];
                 var name;
                 var winner = current["winning_alliance"];
-                var blue = current["alliances"]["blue"];
-                var red = current["alliances"]["red"];
+                var blue = current["alliances"]["blue"]["team_keys"];
+                var red = current["alliances"]["red"]["team_keys"];
                 var videos = current["videos"];
                 var win_loss;
                 var score;
@@ -347,7 +349,7 @@
                     if (blue[q] == "frc2102") {
                         teams += '<th class="blue" id="our-team">2102</th>';
                     } else {
-                        teams += '<th class="blue">'+blue[q]+'</th>';
+                        teams += '<th class="blue">'+blue[q].substring(3)+'</th>';
                     }
                 }
                 // red alliance
@@ -355,7 +357,7 @@
                     if (red[q] == "frc2102") {
                         teams += '<th class="red" id="our-team">2102</th>';
                     } else {
-                        teams += '<th class="red">'+red[q]+'</th>';
+                        teams += '<th class="red">'+red[q].substring(3)+'</th>';
                     }
                 }
 
@@ -377,7 +379,9 @@
                     score = "est " + formatTime(predicted.getHours(), predicted.getMinutes());
                 } else {
                     win_loss = "<th>win</th>";
-                    score = "<th>80-0</th>";
+                    var b_score = current["alliances"]["blue"]["score"];
+                    var r_score = current["alliances"]["red"]["score"];
+                    score = '<th><span class="blue-score">'+b_score+'</span> - <span class="red-score">'+r_score+'</th>';
                 }
                 match_string += "<tr>" + match + win_loss + teams + score + replay + "</tr>";
             }
