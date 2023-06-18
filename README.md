@@ -1,5 +1,5 @@
 # FRC Website Template
-Template for your FRC site to get live updates from the Blue Alliance using the Blue Alliance API. All the CSS, HTML, and JavaScript is in one file so you can easily paste it as an embed code onto your website.
+Template for your FRC site to get live updates from the Blue Alliance using the Blue Alliance API. All the CSS, HTML, and JavaScript is in one file so you can easily paste it as an embed code onto your website. Different parts of the page are available too if you only want a certain part.
 \
 \
 **How to use:**
