@@ -111,6 +111,14 @@
         color:#a77b02;
     }
 
+    .win {
+        color: #1c960c;
+    }
+
+    .lose {
+        color: #bb0606;
+    }
+
 </style>
 
 <!-- HTML -->
@@ -334,6 +342,7 @@
                 var win_loss;
                 var score;
                 var replay;
+                var our_alliance;
                 if (comp_level == "qm") {
                     name = "Quals "+current["match_number"];
                 } else if (comp_level == "sf") {
@@ -348,6 +357,7 @@
                 for (let q = 0; q < 3; q++) {
                     if (blue[q] == "frc2102") {
                         teams += '<th class="blue" id="our-team">2102</th>';
+                        our_alliance = "blue";
                     } else {
                         teams += '<th class="blue">'+blue[q].substring(3)+'</th>';
                     }
@@ -356,6 +366,7 @@
                 for (let q = 0; q < 3; q++) {
                     if (red[q] == "frc2102") {
                         teams += '<th class="red" id="our-team">2102</th>';
+                        our_alliance = "red";
                     } else {
                         teams += '<th class="red">'+red[q].substring(3)+'</th>';
                     }
@@ -378,7 +389,16 @@
                     var predicted = new Date(current["predicted_time"] * 1000);
                     score = "est " + formatTime(predicted.getHours(), predicted.getMinutes());
                 } else {
-                    win_loss = "<th>win</th>";
+                    var w_or_l;
+                    var w = current["winning_alliance"];
+                    if (w == our_alliance) {
+                        w_or_l = '<span class="win">W</span>';
+                    } else if (w == "red" || w == "blue") {
+                        w_or_l = '<span class="lose">L</span>';
+                    } else {
+                        w_or_l = "T";
+                    }
+                    win_loss = "<th>"+w_or_l+"</th>";
                     var b_score = current["alliances"]["blue"]["score"];
                     var r_score = current["alliances"]["red"]["score"];
                     score = '<th><span class="blue-score">'+b_score+'</span> - <span class="red-score">'+r_score+'</th>';
