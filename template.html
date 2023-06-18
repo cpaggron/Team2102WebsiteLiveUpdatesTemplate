@@ -140,7 +140,7 @@
         $.ajax({
             url: "https://www.thebluealliance.com/api/v3/" + dir,
             headers: {
-                "X-TBA-Auth-Key": 'INSERT KEY HERE'
+                "X-TBA-Auth-Key": 'dsU1LGZffn1dcsuBt5E3XwWkL2hmCLUJrhsJiKczMZUCBpdpguEz4Psbh4Dd5RHR'
             },
             async: false,
             success: function(result){info = result;}
@@ -334,6 +334,12 @@
             } else {
                 match_string = "<tr><th colspan='10'>Schedule hasn't been posted yet, please check back later</th></tr>";
             }
+            var sum;
+            try {
+                sum = status["overall_status_str"];
+            } catch(e) {
+                sum = "";
+            }
 
             display_string += 
                 `<div class="body">`+
@@ -345,7 +351,7 @@
                             "&#128205; "+place+"<br>&#128198; Week "+(event["week"]+1)+" | "+start_date+" to "+end_date+
                         `</div>`+
                         `<div class="summary">`+
-                            status["overall_status_str"]+
+                            sum+
                         `</div>`+
                         `<div class="awards">`+
                             `<strong>Awards:</strong>`+
