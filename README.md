@@ -1,5 +1,6 @@
 # Team 2102 Website Live Updates Template
 Template for your FRC site to get live updates from the Blue Alliance using the Blue Alliance API. All the CSS, HTML, and JavaScript is in one file so you can easily paste it as an embed code onto your website.
+
 \
 **How to use:**
 1. Copy the contents of  `template.html`
