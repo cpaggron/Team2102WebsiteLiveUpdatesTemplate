@@ -125,56 +125,6 @@
 <button id="update" onclick="update()">Update</button>
 <p><span id="time"></span><i>Live updates provided by the <a href="https://www.thebluealliance.com/team/2102" target="_blank">Blue Alliance</a></i></p>
 <div id="main-body"></div>
-<div id="test">
-    <div class="left">
-        <div class="header">
-            <strong>Ventura County Regional</strong>
-        </div>
-        <div class="date-place">
-            &#128205; San Diego, California<br>&#128198; Week 4 | March 23 to March 25, 2023
-        </div>
-        <div class="summary">
-            Team 2102 was <b>Rank 8</b> with a record of <b>8-5-0</b>
-        </div>
-        <div class="awards">
-            <strong>Awards:</strong>
-            <table>
-                    <th>
-                        - FIRST Impact Award
-                    </th>
-            </table>
-        </div>
-    </div>
-
-    <div class="right">
-        <table id="schedule">
-            <tr>
-                <th class="top-row">Match</th>
-                <th class="top-row">W/L</th>
-                <th class="blue" colspan="3">Blue Alliance</th>
-                <th class="red" colspan="3">Red Alliance</th>
-                <th class="top-row">Score</th>
-                <th class="top-row">▶️</th>
-            </tr>
-            <tr>
-                <th>Qual 1</th>
-                <th>W</th>
-                <th class="blue">2102</th>
-                <th class="blue">3128</th>
-                <th class="blue">1622</th>
-                <th class="red">1678</th>
-                <th class="red">973</th>
-                <th class="red">254</th>
-                <th>
-                    <span class="blue-score">200</span>
-                    -
-                    <span class="red-score">31</span>
-                </th>
-                <th>▶️</th>
-            </tr>
-        </table>
-    </div>
-</div>
 
 <!-- Use AJAX via Google CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -346,7 +296,7 @@
                 if (comp_level == "qm") {
                     name = "Quals "+current["match_number"];
                 } else if (comp_level == "sf") {
-                    name = "Semis "+current["match_number"];
+                    name = "Playoffs "+current["set_number"];
                 } else {
                     name = "Finals "+current["match_number"];
                 }
